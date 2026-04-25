@@ -1,0 +1,117 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+@theme {
+  --color-primary-50: oklch(0.97 0.01 256.14);
+  --color-primary-100: oklch(0.93 0.03 256.14);
+  --color-primary-200: oklch(0.87 0.06 256.14);
+  --color-primary-300: oklch(0.79 0.1 256.14);
+  --color-primary-400: oklch(0.7 0.15 256.14);
+  --color-primary-500: oklch(0.6 0.18 256.14);
+  --color-primary-600: oklch(0.5 0.18 256.14);
+  --color-primary-700: oklch(0.4 0.15 256.14);
+  --color-primary-800: oklch(0.3 0.12 256.14);
+  --color-primary-900: oklch(0.2 0.08 256.14);
+}
+
+@layer base {
+  :root {
+    --cyber-primary: #22d3ee;
+    --cyber-glow: rgba(34, 211, 238, 0.5);
+    --cyber-bg: #020617;
+  }
+
+  :root[data-cyber-theme="deep-space"] {
+    --cyber-primary: #f472b6;
+    --cyber-glow: rgba(244, 114, 182, 0.5);
+    --cyber-bg: #020617;
+  }
+
+  :root[data-cyber-theme="retro-gold"] {
+    --cyber-primary: #fbbf24;
+    --cyber-glow: rgba(251, 191, 36, 0.5);
+    --cyber-bg: #0c0a09;
+  }
+
+  body {
+    @apply antialiased selection:bg-blue-500/30;
+    background-color: var(--cyber-bg);
+    transition: background-color 0.5s ease;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply backdrop-blur-md border border-white/20 dark:border-gray-800/20;
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+  
+  .mesh-gradient {
+    background-color: var(--cyber-bg);
+    background-image: 
+      radial-gradient(at 0% 0%, var(--cyber-primary) 0, transparent 50%), 
+      radial-gradient(at 100% 100%, var(--cyber-glow) 0, transparent 50%);
+  }
+
+  .dark .mesh-gradient {
+    background-color: #020617;
+    background-image: 
+      radial-gradient(at 0% 0%, rgba(29, 78, 216, 0.2) 0, transparent 50%), 
+      radial-gradient(at 100% 100%, rgba(126, 34, 206, 0.2) 0, transparent 50%);
+  }
+}
+
+/* --- GLOBAL CYBER EFFECTS --- */
+@keyframes glitch-img {
+    0% { clip-path: inset(40% 0 61% 0); transform: translate(-10px, -5px); }
+    20% { clip-path: inset(92% 0 1% 0); transform: translate(10px, 5px); }
+    40% { clip-path: inset(43% 0 1% 0); transform: translate(-10px, 5px); }
+    60% { clip-path: inset(25% 0 58% 0); transform: translate(10px, -5px); }
+    80% { clip-path: inset(54% 0 7% 0); transform: translate(-10px, -5px); }
+    100% { clip-path: inset(58% 0 43% 0); transform: translate(10px, 5px); }
+}
+
+img {
+    transition: transform 0.2s ease, filter 0.2s ease !important;
+}
+
+img:hover {
+    animation: glitch-img 0.2s infinite !important;
+    filter: hue-rotate(90deg) saturate(2) brightness(1.2) !important;
+    transform: scale(1.03) !important;
+}
+
+/* --- 3D TILT CARDS --- */
+.mesh-gradient {
+    perspective: 1200px;
+}
+
+.glass {
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, border-color 0.4s ease !important;
+    transform-style: preserve-3d;
+}
+
+.glass:hover {
+    transform: translateY(-15px) rotateX(8deg) rotateY(-8deg) !important;
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.4),
+        0 0 30px rgba(34, 211, 238, 0.3) !important;
+    border-color: rgba(34, 211, 238, 0.8) !important;
+    z-index: 50;
+}
+
+/* --- MATRIX MODE --- */
+body.matrix-mode {
+    filter: sepia(1) hue-rotate(80deg) saturate(3) brightness(0.8) contrast(1.2) !important;
+}
+
+body.matrix-mode .glass {
+    background: rgba(0, 50, 0, 0.7) !important;
+    border-color: rgba(0, 255, 0, 0.3) !important;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.2) !important;
+}
+
+body.matrix-mode * {
+    color: #00ff00 !important;
+    text-shadow: 0 0 5px #00ff00 !important;
+}
