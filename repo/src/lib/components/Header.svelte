@@ -71,7 +71,9 @@
 				
 				<div class="flex items-center gap-3 border-l border-slate-200 pl-4 ml-2">
 					{#if session}
-						<a href="/dashboard" class="text-sm font-bold text-blue-600 hover:text-blue-500 transition-colors">Panel</a>
+						{#if session.user.email === 'batu99964@gmail.com'}
+							<a href="/dashboard" class="text-sm font-bold text-blue-600 hover:text-blue-500 transition-colors">Panel</a>
+						{/if}
 						<button onclick={handleLogout} class="text-sm font-bold text-red-500 hover:text-red-700 transition-colors">Çıkış Yap</button>
 					{:else}
 						<a href="/login" class="text-sm font-bold text-slate-600 hover:text-blue-600 transition-colors">Giriş Yap</a>

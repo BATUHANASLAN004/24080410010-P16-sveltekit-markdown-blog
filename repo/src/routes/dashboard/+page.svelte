@@ -11,8 +11,8 @@
 		user = data?.user;
 		loading = false;
 		
-		if (!user) {
-			window.location.href = '/login';
+		if (!user || user.email !== 'batu99964@gmail.com') {
+			window.location.href = '/';
 		}
 	});
 

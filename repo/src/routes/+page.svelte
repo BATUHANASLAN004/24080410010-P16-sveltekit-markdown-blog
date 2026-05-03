@@ -2,11 +2,19 @@
 	import PostCard from '$lib/components/PostCard.svelte';
 	import Newsletter from '$lib/components/Newsletter.svelte';
 	import { fly, fade } from 'svelte/transition';
+	import { onMount } from 'svelte';
+	import { supabase } from '$lib/supabaseClient';
 
 	let { data } = $props();
 	let visiblePostsCount = $state(4);
 	let visiblePosts = $derived(data.posts.slice(0, visiblePostsCount));
 	let hasMore = $derived(visiblePostsCount < data.posts.length);
+	let session = $state(null);
+
+	onMount(async () => {
+		const { data: { session: s } } = await supabase.auth.getSession();
+		session = s;
+	});
 
 	function loadMore() {
 		visiblePostsCount += 4;
@@ -34,12 +42,22 @@
 			<span class="relative z-10">Yazıları Keşfet</span>
 			<div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] pointer-events-none"></div>
 		</a>
-		<a href="/tags" class="group px-10 py-5 glass hover:bg-white dark:hover:bg-gray-800 rounded-2xl font-bold transition-all hover:scale-105 active:scale-95 border border-white/40 dark:border-gray-700/40 flex items-center gap-2">
-			<span>Etiketlere Göz At</span>
-			<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-			</svg>
-		</a>
+		
+		{#if session}
+			<a href="/dashboard/new" class="group px-10 py-5 bg-gradient-to-r from-cyan-600 to-blue-700 text-white rounded-2xl font-bold transition-all hover:scale-105 active:scale-95 shadow-xl shadow-cyan-500/20 border border-cyan-400/20 flex items-center gap-3">
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+				</svg>
+				<span>Yazı Paylaş</span>
+			</a>
+		{:else}
+			<a href="/tags" class="group px-10 py-5 glass hover:bg-white dark:hover:bg-gray-800 rounded-2xl font-bold transition-all hover:scale-105 active:scale-95 border border-white/40 dark:border-gray-700/40 flex items-center gap-2">
+				<span>Etiketlere Göz At</span>
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+				</svg>
+			</a>
+		{/if}
 	</div>
 </section>
 
