@@ -97,25 +97,13 @@
 		window.addEventListener('scroll', handleScroll);
 		window.addNotification = addNotification;
 
-		// Secret Matrix Mode Toggle
-		const handleKeyDown = (e) => {
-			if (e.key.toLowerCase() === 'g') {
-				document.body.classList.toggle('matrix-mode');
-				if (window.addNotification) {
-					const isMatrix = document.body.classList.contains('matrix-mode');
-					window.addNotification(isMatrix ? 'MATRIX_MOD_AKTIF' : 'NORMAL_MOD_AKTIF', 'success');
-					playTechSound(isMatrix ? 1200 : 400, 'sawtooth', 0.1);
-				}
-			}
-		};
-		window.addEventListener('keydown', handleKeyDown);
+
 
 		return () => {
 			clearTimeout(timer);
 			clearInterval(statsInterval);
 			window.removeEventListener('mousemove', handleMouseMove);
 			window.removeEventListener('scroll', handleScroll);
-			window.removeEventListener('keydown', handleKeyDown);
 		};
 	});
 </script>
