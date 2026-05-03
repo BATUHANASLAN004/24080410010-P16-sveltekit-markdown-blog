@@ -5,16 +5,45 @@
 
 	let user = $state(null);
 	let loading = $state(true);
+	let allPosts = $state([]);
+	let deletingId = $state(null);
 
 	onMount(async () => {
 		const { data } = await supabase.auth.getUser();
 		user = data?.user;
-		loading = false;
 		
 		if (!user || user.email !== 'batu99964@gmail.com') {
 			window.location.href = '/';
+			return;
 		}
+
+		await fetchAllPosts();
+		loading = false;
 	});
+
+	async function fetchAllPosts() {
+		const { data, error } = await supabase
+			.from('posts')
+			.select('*')
+			.order('created_at', { ascending: false });
+		
+		if (!error) allPosts = data;
+	}
+
+	async function deletePost(id) {
+		if (!confirm('Bu yazıyı silmek istediğinize emin misiniz?')) return;
+		
+		deletingId = id;
+		const { error } = await supabase.from('posts').delete().eq('id', id);
+		
+		if (error) {
+			alert('Silme hatası: ' + error.message);
+		} else {
+			allPosts = allPosts.filter(p => p.id !== id);
+			if (window.addNotification) window.addNotification('Yazı başarıyla silindi', 'success');
+		}
+		deletingId = null;
+	}
 
 	async function handleLogout() {
 		await supabase.auth.signOut();
@@ -22,70 +51,84 @@
 	}
 </script>
 
-<div class="max-w-4xl mx-auto py-12 px-4" in:fade>
+<div class="max-w-6xl mx-auto py-12 px-4" in:fade>
 	{#if loading}
 		<div class="flex justify-center items-center h-64">
 			<div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-cyan-500"></div>
 		</div>
 	{:else if user}
 		<div class="glass p-8 rounded-3xl border border-white/10 relative overflow-hidden" in:fly={{ y: 20, duration: 800 }}>
-			<!-- Background Glow -->
-			<div class="absolute -top-24 -right-24 w-64 h-64 bg-cyan-500/10 rounded-full blur-[100px]"></div>
-			
 			<div class="relative z-10">
 				<div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
 					<div>
 						<h1 class="text-4xl font-black italic tracking-tighter text-white mb-2 uppercase">
-							KONTROL_PANELİ
+							YÖNETİCİ_MERKEZİ
 						</h1>
 						<p class="text-cyan-400/70 font-mono text-sm tracking-widest uppercase">
-							Sistem Durumu: Çevrimiçi | {user.email}
+							Admin: {user.email} | Toplam Yazı: {allPosts.length}
 						</p>
 					</div>
-					<button 
-						onclick={handleLogout}
-						class="px-6 py-2 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-all font-bold text-sm uppercase tracking-widest"
-					>
-						[SİSTEM_ÇIKIŞ]
-					</button>
+					<div class="flex gap-4">
+						<a href="/dashboard/new" class="px-6 py-2 rounded-xl bg-cyan-600 text-white font-bold text-sm uppercase tracking-widest hover:scale-105 transition-all">
+							[YENİ_YAZI_EKLE]
+						</a>
+						<button 
+							onclick={handleLogout}
+							class="px-6 py-2 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-all font-bold text-sm uppercase tracking-widest"
+						>
+							[ÇIKIŞ]
+						</button>
+					</div>
 				</div>
 
-				<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-					<!-- Create Post Card -->
-					<a 
-						href="/dashboard/new" 
-						class="group glass p-8 rounded-2xl border border-white/5 hover:border-cyan-500/50 transition-all duration-500 relative overflow-hidden"
-					>
-						<div class="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-						<div class="relative z-10">
-							<div class="w-12 h-12 rounded-xl bg-cyan-500/20 flex items-center justify-center text-cyan-400 mb-6 group-hover:scale-110 transition-transform">
-								<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-								</svg>
-							</div>
-							<h3 class="text-xl font-bold text-white mb-2">Yeni Yazı Oluştur</h3>
-							<p class="text-gray-400 text-sm leading-relaxed">
-								Sisteme yeni bir içerik ekleyin. Yazılarınız anında blog listesinde görünecektir.
-							</p>
+				<!-- Management Table -->
+				<div class="mt-8 overflow-x-auto">
+					<table class="w-full text-left border-collapse">
+						<thead>
+							<tr class="border-b border-white/10 text-cyan-400 font-mono text-[10px] uppercase tracking-[0.2em]">
+								<th class="py-4 px-4">BAŞLIK</th>
+								<th class="py-4 px-4">TARİH</th>
+								<th class="py-4 px-4">DURUM</th>
+								<th class="py-4 px-4 text-right">İŞLEMLER</th>
+							</tr>
+						</thead>
+						<tbody class="divide-y divide-white/5">
+							{#each allPosts as post}
+								<tr class="hover:bg-white/5 transition-colors group">
+									<td class="py-4 px-4">
+										<div class="text-white font-bold">{post.title}</div>
+										<div class="text-gray-500 text-xs">{post.description || 'Özet yok'}</div>
+									</td>
+									<td class="py-4 px-4 text-gray-400 text-xs font-mono">
+										{new Date(post.created_at).toLocaleDateString('tr-TR')}
+									</td>
+									<td class="py-4 px-4">
+										<span class="px-2 py-1 rounded text-[10px] font-bold bg-green-500/10 text-green-400 border border-green-500/20">
+											YAYINDA
+										</span>
+									</td>
+									<td class="py-4 px-4 text-right">
+										<button 
+											onclick={() => deletePost(post.id)}
+											disabled={deletingId === post.id}
+											class="text-red-500 hover:text-red-400 transition-colors p-2 rounded-lg hover:bg-red-500/10 disabled:opacity-50"
+											title="Yazıyı Sil"
+										>
+											<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+											</svg>
+										</button>
+									</td>
+								</tr>
+							{/each}
+						</tbody>
+					</table>
+					
+					{#if allPosts.length === 0}
+						<div class="py-20 text-center text-gray-500 font-mono italic">
+							Henüz veritabanında yazı bulunamadı.
 						</div>
-					</a>
-
-					<!-- Profile/Stats Card -->
-					<div class="glass p-8 rounded-2xl border border-white/5 relative overflow-hidden">
-						<div class="relative z-10">
-							<div class="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center text-purple-400 mb-6">
-								<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-								</svg>
-							</div>
-							<h3 class="text-xl font-bold text-white mb-2">Profil Bilgileri</h3>
-							<div class="space-y-2 mt-4 font-mono text-[10px] uppercase tracking-wider text-gray-500">
-								<p>ID: <span class="text-cyan-400">{user.id.substring(0, 8)}...</span></p>
-								<p>YETKİ: <span class="text-purple-400">YAZAR</span></p>
-								<p>DURUM: <span class="text-green-400">AKTİF</span></p>
-							</div>
-						</div>
-					</div>
+					{/if}
 				</div>
 			</div>
 		</div>
