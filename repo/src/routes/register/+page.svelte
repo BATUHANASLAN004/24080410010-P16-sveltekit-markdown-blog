@@ -57,6 +57,13 @@
 
 			if (error) throw error;
 			
+			// Üye listesine (profiles tablosuna) ekle
+			if (data.user) {
+				await supabase.from('profiles').insert([
+					{ id: data.user.id, email: data.user.email }
+				]);
+			}
+
 			successMsg = 'Kayıt başarılı! Lütfen giriş yapın.';
 			if (window.addNotification) window.addNotification('Kayıt Başarılı!', 'success');
 			
