@@ -14,9 +14,8 @@
 	let successMsg = $state('');
 
 	function validateEmail(mail) {
-		// Daha esnek bir kontrol: Sadece @ işareti var mı diye bakarız.
-		// Gerçek doğrulamayı Supabase zaten yapıyor.
-		return mail.includes('@') && mail.includes('.');
+		const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		return re.test(String(mail).toLowerCase());
 	}
 
 	async function handleRegister(e) {
