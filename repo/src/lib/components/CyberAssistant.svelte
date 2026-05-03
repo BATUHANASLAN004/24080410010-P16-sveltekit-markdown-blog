@@ -71,46 +71,48 @@
 			class="glass w-80 h-96 mb-4 rounded-2xl border border-cyan-500/30 flex flex-col overflow-hidden shadow-2xl backdrop-blur-2xl"
 		>
 			<!-- Header -->
-			<div class="p-4 border-b border-white/10 bg-cyan-500/10 flex items-center justify-between">
+			<div class="p-4 border-b border-cyan-500/20 bg-gradient-to-r from-cyan-50 to-blue-50 flex items-center justify-between rounded-t-2xl">
 				<div class="flex items-center gap-2">
 					<div class="w-2 h-2 bg-green-500 rounded-full animate-ping"></div>
-					<span class="text-[10px] font-black tracking-widest text-cyan-400 uppercase">RB-AI ASİSTAN</span>
+					<span class="text-[11px] font-black tracking-widest text-blue-600 uppercase">RB-AI ASİSTAN</span>
 				</div>
-				<button onclick={toggle} class="text-gray-500 hover:text-white transition-colors">
-					<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+				<button onclick={toggle} class="text-slate-400 hover:text-slate-800 transition-colors">
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
 					</svg>
 				</button>
 			</div>
 
 			<!-- Messages -->
-			<div class="flex-grow p-4 overflow-y-auto space-y-4 font-mono text-[11px] scrollbar-hide">
+			<div class="flex-grow p-4 overflow-y-auto space-y-4 font-['Inter',sans-serif] text-[12px] scrollbar-hide bg-white/60 backdrop-blur-md">
 				{#each messages as msg}
 					<div class="flex {msg.role === 'user' ? 'justify-end' : 'justify-start'}">
-						<div class="max-w-[80%] p-3 rounded-xl {msg.role === 'user' ? 'bg-cyan-600/20 border border-cyan-500/30' : 'bg-white/5 border border-white/10 text-gray-300'}">
-							{msg.text}
+						<div class="max-w-[85%] p-3 rounded-2xl shadow-sm {msg.role === 'user' ? 'bg-slate-100 text-slate-800 rounded-tr-none border border-slate-200' : 'bg-gradient-to-br from-cyan-500 to-blue-600 text-white rounded-tl-none border border-cyan-400/50 shadow-cyan-500/20'}">
+							<p class="leading-relaxed">{msg.text}</p>
 						</div>
 					</div>
 				{/each}
 				{#if typing}
 					<div class="flex justify-start">
-						<div class="bg-white/5 p-3 rounded-xl border border-white/10 animate-pulse">
-							Veri işleniyor...
+						<div class="bg-gradient-to-br from-cyan-500 to-blue-600 text-white p-3 rounded-2xl rounded-tl-none border border-cyan-400/50 flex items-center gap-1">
+							<div class="w-1.5 h-1.5 bg-white rounded-full animate-bounce" style="animation-delay: 0ms;"></div>
+							<div class="w-1.5 h-1.5 bg-white rounded-full animate-bounce" style="animation-delay: 150ms;"></div>
+							<div class="w-1.5 h-1.5 bg-white rounded-full animate-bounce" style="animation-delay: 300ms;"></div>
 						</div>
 					</div>
 				{/if}
 			</div>
 
 			<!-- Input -->
-			<form onsubmit={(e) => { e.preventDefault(); sendMessage(); }} class="p-4 border-t border-white/10 flex gap-2">
+			<form onsubmit={(e) => { e.preventDefault(); sendMessage(); }} class="p-3 border-t border-slate-200 bg-white/80 backdrop-blur-md flex gap-2 rounded-b-2xl">
 				<input 
 					bind:value={input}
-					placeholder="Bir şeyler sorun..."
-					class="flex-grow bg-white/5 border border-white/10 rounded-lg px-3 py-2 outline-none focus:border-cyan-500/50 transition-all text-[11px]"
+					placeholder="Yapay zekaya sorun..."
+					class="flex-grow bg-slate-50 border border-slate-200 text-slate-800 placeholder-slate-400 rounded-xl px-4 py-2.5 outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all text-[12px]"
 				/>
 				<button 
 					type="submit"
-					class="p-2 bg-cyan-600/20 border border-cyan-500/30 rounded-lg text-cyan-400 hover:bg-cyan-600/40 transition-all"
+					class="p-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-xl text-white hover:opacity-90 shadow-md transition-all active:scale-95"
 				>
 					<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7" />

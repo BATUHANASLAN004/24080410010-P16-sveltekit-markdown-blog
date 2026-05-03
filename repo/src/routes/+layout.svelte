@@ -267,7 +267,7 @@
 <Header />
 
 <div 
-	class="mesh-gradient min-h-screen flex flex-col text-gray-900 dark:text-gray-100 font-['Inter',sans-serif] selection:bg-blue-500/20 relative overflow-hidden"
+	class="mesh-gradient min-h-screen flex flex-col text-gray-900 font-['Inter',sans-serif] selection:bg-blue-500/20 relative overflow-hidden"
 	onmousedown={() => playTechSound(600, 'sine', 0.1)}
 >
 	<!-- Interactive Cyber Grid & Spotlight -->
