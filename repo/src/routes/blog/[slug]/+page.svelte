@@ -42,13 +42,19 @@
 				</div>
 			</div>
 		</div>
-		<div class="mt-8 flex items-center justify-between">
+	<div class="mt-8 flex items-center justify-between">
 			<div class="flex gap-2">
-				{#each data.meta.categories as category}
-					<a href="/tags/{category}" class="inline-flex items-center rounded-xl glass px-3 py-1 text-xs font-bold text-blue-600 dark:text-blue-400 hover:bg-blue-600 hover:text-white transition-all">
-						#{category}
-					</a>
-				{/each}
+				{#if data.meta.categories}
+					{#each data.meta.categories as category}
+						<a href="/tags/{category}" class="inline-flex items-center rounded-xl glass px-3 py-1 text-xs font-bold text-blue-600 dark:text-blue-400 hover:bg-blue-600 hover:text-white transition-all">
+							#{category}
+						</a>
+					{/each}
+				{:else if data.meta.type === 'database'}
+					<span class="inline-flex items-center rounded-xl glass px-3 py-1 text-xs font-bold text-cyan-600 dark:text-cyan-400">
+						#Veritabanı_İçeriği
+					</span>
+				{/if}
 			</div>
 			<div class="flex gap-3">
 				<button class="p-2 rounded-xl glass hover:bg-blue-500 hover:text-white transition-all" title="Bağlantıyı Kopyala">
@@ -64,7 +70,11 @@
 	</header>
 
 	<div class="mt-12 prose prose-lg prose-gray dark:prose-invert max-w-none prose-pre:bg-gray-900 prose-pre:border prose-pre:border-gray-800 prose-img:rounded-3xl prose-headings:scroll-mt-20">
-		<data.content />
+		{#if data.meta.type === 'database'}
+			<div class="whitespace-pre-wrap">{data.content}</div>
+		{:else}
+			<data.content />
+		{/if}
 	</div>
 
 	<!-- Comments System -->
