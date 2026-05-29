@@ -143,3 +143,54 @@ Uygulamanın genelinde karanlık arkaplan üzerine parlayan neon renkler (cyan, 
 
 - **API Gizliliği:** Gemini API anahtarı kesinlikle Frontend'e (istemciye) gönderilmez. SvelteKit `$env/static/private` ile sadece backend (`+server.js`) üzerinde tutulur.
 - **Performans:** SSR (Server-Side Rendering) ile sayfa ilk yüklemesinde SEO dostu olarak gelir. Görseller ve script'ler SvelteKit'in optimizasyon motorundan geçer.
+
+## 12. Ekran Görüntüleri ve Mimari
+
+Bu bölümde projeye ait ekran görüntüleri ve mimari diyagramlar yer almaktadır.
+
+### 12.1. UI Ekranları
+
+#### Landing / Ana Sayfa
+![Landing](docs/screenshots/landing.png)
+
+#### Kayıt / Giriş Ekranı
+![Login](docs/screenshots/login.png)
+
+#### Dashboard (Dolu)
+![Dashboard Full](docs/screenshots/dashboard_full.png)
+
+#### Dashboard (Boş)
+![Dashboard Empty](docs/screenshots/dashboard_empty.png)
+
+#### Ana CRUD Ekranı (Blog Listesi)
+![CRUD List](docs/screenshots/crud_list.png)
+
+#### Detay Sayfası
+![Detail](docs/screenshots/detail.png)
+
+#### Mobile Görünüm
+![Mobile](docs/screenshots/mobile.png)
+
+#### 404 Hata Sayfası
+![404 Error](docs/screenshots/error_404.png)
+
+### 12.2. Mimari ve Akış Diyagramları
+
+#### C4 Context Diyagramı
+![C4 Context](docs/screenshots/c4_context.png)
+
+#### C4 Container Diyagramı
+![C4 Container](docs/screenshots/c4_container.png)
+
+#### Login Akışı (Sequence)
+![Sequence Login](docs/screenshots/sequence_login.png)
+
+#### Veritabanı ER Diyagramı
+![ER Diagram](docs/screenshots/er_diagram.png)
+
+#### Sitemap
+![Sitemap](docs/screenshots/sitemap.png)
+
+#### User Flow
+![User Flow](docs/screenshots/user_flow.png)
+
