@@ -47,3 +47,8 @@ pnpm-debug.log*
 # Database dumps
 *.sql.gz
 *.dump
+
+take_screenshots.mjs
+repo/take_screenshots.mjs
+repo/docs/
+
