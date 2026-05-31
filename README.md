@@ -61,9 +61,7 @@ Sıradan, statik blog tasarımlarının ötesine geçerek kullanıcıya etkileş
 | **Backend / DB** | Supabase (PostgreSQL + Auth) |
 | **Syntax Highlight** | Shiki |
 | **Markdown** | MDsveX |
-
-> Teknoloji seçimlerinin detaylı gerekçesi: [PROJE-RAPORU.md · Bölüm 7](PROJE-RAPORU.md#7-teknoloji-yığını-tech-stack)
-
+> Teknoloji seçimlerinin detaylı gerekçesi için kök dizindeki PDF dosyasına bakınız: [PROJE-RAPORU.pdf](PROJE-RAPORU.pdf) (Bölüm 4)
 ---
 
 ## 🏗 Mimari
@@ -73,9 +71,7 @@ Sıradan, statik blog tasarımlarının ötesine geçerek kullanıcıya etkileş
 - Yapay zeka sorguları güvenli şekilde `src/routes/api/chat/+server.js` üzerinden Gemini API'ye aktarılır
 - Supabase Auth ile oturum yönetimi `@supabase/ssr` ile SSR uyumlu kurulmuştur
 - Sunucu tarafında anahtar yönetimi `$env/static/private` ile `.env` dosyasından okunur
-
-[Detaylı mimari ve diyagramlar →](PROJE-RAPORU.md#8-sistem-mimarisi)
-
+[Detaylı mimari ve diyagramlar için rapora göz atın →](PROJE-RAPORU.pdf)
 ---
 
 ## 🚀 Kurulum
@@ -132,8 +128,8 @@ npm run dev
 │   │   ├── routes/          # Sayfalar ve API rotaları
 │   │   └── posts/           # Markdown blog yazıları
 │   └── static/              # Statik dosyalar
-├── docs/screenshots/        # Proje ekran görüntüleri
-├── PROJE-RAPORU.md          # Detaylı teknik rapor
+├── PROJE-RAPORU.pdf         # Detaylı teknik rapor (PDF Formatı)
+├── PROJE-RAPORU.docx        # Detaylı teknik rapor (Word Formatı)
 └── README.md                # Bu dosya
 ```
 
