@@ -1,0 +1,140 @@
+openapi: 3.1.0
+info:
+  title: RB Blog API
+  description: FUI ve AI destekli SvelteKit blog motorunun temel endpoint spesifikasyonları.
+  version: 1.0.0
+  contact:
+    name: Batuhan Aslan
+    email: batu99964@gmail.com
+servers:
+  - url: http://localhost:5173/api
+    description: Yerel Geliştirme Sunucusu
+paths:
+  /chat:
+    post:
+      summary: Yapay Zeka Asistanı ile Sohbet
+      description: Gemini 2.5 Flash modelini kullanarak kullanıcı sorularını yanıtlar. Supabase auth oturumu gerektirir (RLS ve rate-limiting için).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: "Svelte 5 Runes nedir?"
+      responses:
+        '200':
+          description: Başarılı AI yanıtı
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+        '401':
+          description: Yetkisiz erişim (Giriş yapılmamış)
+  /contact:
+    post:
+      summary: İletişim Formu Gönderimi
+      description: İletişim sayfasından gelen mesajları veritabanına kaydeder.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                message:
+                  type: string
+      responses:
+        '200':
+          description: Mesaj başarıyla iletildi
+  /dashboard/new:
+    post:
+      summary: Yeni Blog Yazısı Oluşturma
+      description: Markdown formatında yeni bir gönderi oluşturur. Sadece yetkili yazarlar içindir.
+      responses:
+        '201':
+          description: Gönderi başarıyla oluşturuldu
+  /dashboard/{id}/edit:
+    put:
+      summary: Blog Yazısını Güncelleme
+      description: Var olan bir blog yazısının içeriğini veya başlığını günceller. Sadece gönderi sahibi yetkilidir.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Gönderi güncellendi
+  /dashboard/{id}:
+    delete:
+      summary: Blog Yazısını Silme
+      description: İlgili blog yazısını veritabanından kalıcı olarak siler. Sadece gönderi sahibi yetkilidir.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Gönderi başarıyla silindi
+  /tags:
+    get:
+      summary: Tüm Etiketleri Getir
+      description: Sistemde kayıtlı olan tüm blog etiketlerini benzersiz olarak listeler.
+      responses:
+        '200':
+          description: Etiket listesi
+  /search:
+    get:
+      summary: Tam Metin Arama (Full-Text Search)
+      description: Supabase PostgreSQL to_tsvector fonksiyonunu kullanarak blog yazıları içerisinde metin araması yapar.
+      parameters:
+        - in: query
+          name: q
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Eşleşen makaleler listesi
+  /auth/callback:
+    get:
+      summary: OAuth Callback
+      description: Supabase Auth sağlayıcısından dönen session'ı işler ve çereze kaydeder.
+      responses:
+        '302':
+          description: Yönlendirme
+  /auth/login:
+    post:
+      summary: Kullanıcı Girişi
+      description: Email ve şifre kullanarak Supabase üzerinden oturum açar.
+      responses:
+        '200':
+          description: Başarılı giriş
+  /auth/logout:
+    post:
+      summary: Çıkış Yap
+      description: Mevcut oturumu kapatır ve yetki çerezlerini temizler.
+      responses:
+        '200':
+          description: Çıkış başarılı
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sb-access-token
+security:
+  - cookieAuth: []
